@@ -11,4 +11,25 @@
     <ProjectReference Include="..\WrapperApp.Library\WrapperApp.Library.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <NativeDllName>WrapperApp.Persistence.dll</NativeDllName>
+    <NativePdbName>WrapperApp.Persistence.pdb</NativePdbName>
+    <NativePlatform Condition="'$(Platform)' == 'AnyCPU'">x64</NativePlatform>
+    <NativePlatform Condition="'$(Platform)' != 'AnyCPU'">$(Platform)</NativePlatform>
+  </PropertyGroup>
+
+  <Target Name="CopyRepositoryDll" AfterTargets="Build">
+    <PropertyGroup>
+      <NativeFolder>$(SolutionDir)$(NativePlatform)\$(Configuration)</NativeFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <NativeDll Include="$(NativeFolder)\$(NativeDllName)" />
+      <NativePdb Include="$(NativeFolder)\$(NativePdbName)" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(NativeDll)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+
+    <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(NativePdb)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+  </Target>
 </Project>

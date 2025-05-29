@@ -81,7 +81,7 @@ void TestWithConsole()
                 var items = adapter.ListAll();
                 foreach (var i in items)
                 {
-                    Console.WriteLine(i);
+                    Console.WriteLine(i.Name);
                 }
                 break;
 
