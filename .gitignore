@@ -73,3 +73,4 @@ npm-debug.log*
 *.swp
 Thumbs.db
 ehthumbs.db
+data.txt
