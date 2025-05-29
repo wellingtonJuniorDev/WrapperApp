@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+	</ItemGroup>
+
+  <PropertyGroup>
+    <NativeDllName>WrapperApp.Persistence.dll</NativeDllName>
+    <NativePdbName>WrapperApp.Persistence.pdb</NativePdbName>
+    <NativePlatform Condition="'$(Platform)' == 'AnyCPU'">x64</NativePlatform>
+    <NativePlatform Condition="'$(Platform)' != 'AnyCPU'">$(Platform)</NativePlatform>
+  </PropertyGroup>
+
+  <Target Name="CopyRepositoryDll" AfterTargets="Build">
+    <PropertyGroup>
+      <NativeFolder>$(SolutionDir)$(NativePlatform)\$(Configuration)</NativeFolder>
+      <ClientFolder>$(SolutionDir)WrapperApp.Client\assets</ClientFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <NativeDll Include="$(NativeFolder)\$(NativeDllName)" />
+      <NativePdb Include="$(NativeFolder)\$(NativePdbName)" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(NativeDll)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="@(NativeDll)" DestinationFolder="$(ClientFolder)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+
+    <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(NativePdb)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+    <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(NativePdb)" DestinationFolder="$(ClientFolder)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+  </Target>
+  
+  <Target Name="CopyLibraryDll" AfterTargets="Build">
+    <PropertyGroup>
+      <ClientFolder>$(SolutionDir)WrapperApp.Client\assets</ClientFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <BuiltDll Include="$(TargetPath)" />
+      <BuiltPdb Include="$(TargetDir)$(TargetName).pdb" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(BuiltDll)" DestinationFolder="$(ClientFolder)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+    <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(BuiltPdb)" DestinationFolder="$(ClientFolder)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+  </Target>
+   
+</Project>
